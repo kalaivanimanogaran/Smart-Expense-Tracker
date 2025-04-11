@@ -1,15 +1,20 @@
 import React, { useState } from 'react'
 import { Radio, Select,Table } from 'antd'; 
 import searchImg from "../../assets/search.png";
-//import { documentId } from 'firebase/firestore';
-import { parse,unparse } from 'papaparse';
+import { parse, } from 'papaparse';
+import { toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
-
-function TransactionsTable({transactions, addTransaction,fetchTransactions}) {
+function TransactionsTable({transactions, addTransaction,fetchTransactions,setEditMode,
+  setEditTransactionData,  deleteTransaction,setIsIncomeModalVisible,
+  setIsExpenseModalVisible,}) {
     const {Option} =Select;
     const [search,setSearch] =useState("");
     const [typeFilter, setTypeFilter]=useState("");
     const [sortKey, setSortKey]=useState("");
+    
+
+   
     const columns=[
         {
             title:"Name",
@@ -40,7 +45,20 @@ function TransactionsTable({transactions, addTransaction,fetchTransactions}) {
             dataIndex:"date",
             key:"date",
         },
+        {
+          title: "Actions",
+          key: "actions",
+          render: (text, record) => (
+            <div style={{ display: "flex", gap: "0.5rem" }}>
+              <button className="btn btn-blue" onClick={() => onEdit(record)}>Edit</button>
+              <button className="btn btn-red" onClick={() => onDelete(record)}>Delete</button>
+            </div>
+          ),
+        }
+        
+
     ];
+
 
     let filteredTransactions = transactions.filter(
     (item)=>
@@ -56,50 +74,112 @@ function TransactionsTable({transactions, addTransaction,fetchTransactions}) {
             return 0;
         }
     });
-
-function exportCSV(){
-  var csv = unparse({
-    fields: ["name", "type","tag","date","amount"],
-    data: transactions,
-  });
-
-  const blob = new Blob([csv],{type: "text/csv;charset=utf-8;"});
-  const url =URL.createObjectURL(blob);
-  const link =document.createElement("a");
-  link.href=url;
-  link.download="transactions.csv"
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-}
-
-function  importFromCSV (event){
-  event.preventDefault();
-  try{
-    parse(event.target.files[0],{
-      header:true,
-      complete: async function (results){
-        //now results.data is as array of objects represating your CSV rows
-        for(const transaction of results.data){
-
-        //write each transaction to firebase. you can use the addTransaction function here 
-      console.log("RESULTS>>>",results.data)
-      const NewTransaction ={
-        ...transaction,
-        amount:parseFloat(transaction.amount),
-      };
-      await addTransaction(NewTransaction,true)
-    }
-      },
-    });
-    toast.success("All Transaction Added");
-    fetchTransactions();
-    event.target.files =null;
   
-  } catch(e){
-     toast.error(e.message);
-  }
-}
+   
+   
+    
+    async function handleExport() {
+      try {
+        // 🔹 Send data to Google Sheet
+        const response = await fetch("https://script.google.com/macros/s/AKfycbzuAMbpuxe5aX8Aj_SNjWzMilCZAMv8IUXG3C2I0ZBiO_j70zP9YYgJ5mr9Qk2Skjll/exec", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(sortedTransactions),
+        });
+    
+        const result = await response.text();
+    
+        if (result.toLowerCase().includes("success")) {
+          toast.success("Exported to Google Sheet Successfully");
+    
+      
+          exportCSVLocally();
+    
+          
+          setTimeout(() => {
+            window.open("https://docs.google.com/spreadsheets/d/11_Fq8yM4lx5mgKG-qlXzpmveUPz-c9g1_IX7eg19h8k/edit", "_blank");
+
+          }, 1000); 
+        } else {
+          toast.error("Something went wrong. Try again!");
+        }
+      } catch (error) {
+        console.error("Export Error:", error);
+        toast.error("Export failed. Please try again.");
+      }
+    }
+   
+
+    
+    
+
+    function exportCSVLocally() {
+      const headers = ["Name", "Amount", "Tag", "Type", "Date"];
+      const csvRows = [
+        headers.join(","),
+        ...sortedTransactions.map(tx =>
+          [tx.name, tx.amount, tx.tag, tx.type, tx.date].join(",")
+        ),
+      ];
+      const csvData = new Blob([csvRows.join("\n")], { type: "text/csv" });
+      const url = window.URL.createObjectURL(csvData);
+      const a = document.createElement("a");
+      a.setAttribute("hidden", "");
+      a.setAttribute("href", url);
+      a.setAttribute("download", "transactions.csv");
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
+    
+    function importFromCSV(event) {
+      event.preventDefault();
+      try {
+        parse(event.target.files[0], {
+          header: true,
+          complete: async function (results) {
+            try {
+              for (const transaction of results.data) {
+                if (!transaction.name || !transaction.amount) continue
+                const NewTransaction = {
+                  ...transaction,
+                  amount: parseFloat(transaction.amount),
+                };
+                await addTransaction(NewTransaction, true);
+              }              
+              toast.success("All Transactions Added");
+              fetchTransactions();
+            } catch (innerError) {
+              toast.error("Some transactions failed to import.");
+              console.error(innerError);
+            }
+          },
+        });
+      } catch (e) {
+        toast.error(e.message);
+      }
+    }
+
+    const onEdit = (record) => {
+      setEditMode(true);
+      setEditTransactionData(record);
+    
+      if (record.type === "income") {
+        setIsIncomeModalVisible(true); 
+      } else {
+        setIsExpenseModalVisible(true); 
+      }
+    };
+    
+    
+    const onDelete = (record) => {
+      if (window.confirm("Are you sure you want to delete this transaction?")) {
+        deleteTransaction(record.id);
+      }
+    };
+
 
   return(
   <div
@@ -168,7 +248,7 @@ function  importFromCSV (event){
         width:"400px",
     }}
   >
-    <button className="btn" onClick={exportCSV}>
+    <button className="btn" onClick={handleExport}>
       Export to CSV</button>
     <label htmlFor="file-csv" className="btn btn-blue">
         Import From CSV
@@ -180,8 +260,9 @@ function  importFromCSV (event){
       required
       onChange={importFromCSV}
       style={{display:"none"}}
-
     />
+   
+
 
   </div>
   </div>

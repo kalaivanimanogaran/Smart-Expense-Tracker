@@ -5,13 +5,13 @@ import { BrowserRouter as Rouder,Route,Routes}from "react-router-dom";
 import Signup from "./Pages/Signup";
 import Dashboard from "./Pages/Dashboard";
 import { ToastContainer,toast}from "react-toastify"
-
 import "react-toastify/dist/ReactToastify.css";
 
 function App() {
+
   return (
     <>
-    <ToastContainer/>
+   <ToastContainer/>
     <Rouder>
       <Routes>
         <Route path="/"element={<Signup/>} />
