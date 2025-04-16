@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Radio, Select,Table } from 'antd'; 
 import searchImg from "../../assets/search.png";
-import { parse, } from 'papaparse';
+import { parse, unparse } from 'papaparse';
 import { toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -75,92 +75,99 @@ function TransactionsTable({transactions, addTransaction,fetchTransactions,setEd
         }
     });
   
-   
-   
-    
-    async function handleExport() {
-      try {
-        // 🔹 Send data to Google Sheet
-        const response = await fetch("https://script.google.com/macros/s/AKfycbzuAMbpuxe5aX8Aj_SNjWzMilCZAMv8IUXG3C2I0ZBiO_j70zP9YYgJ5mr9Qk2Skjll/exec", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(sortedTransactions),
-        });
-    
-        const result = await response.text();
-    
-        if (result.toLowerCase().includes("success")) {
-          toast.success("Exported to Google Sheet Successfully");
-    
-      
-          exportCSVLocally();
-    
-          
-          setTimeout(() => {
-            window.open("https://docs.google.com/spreadsheets/d/11_Fq8yM4lx5mgKG-qlXzpmveUPz-c9g1_IX7eg19h8k/edit", "_blank");
+    function exportCSV(){
+      var csv =unparse ({
+        fields:["name","type","tag","date","amount"],
+        data:transactions,
+      });
 
-          }, 1000); 
-        } else {
-          toast.error("Something went wrong. Try again!");
-        }
-      } catch (error) {
-        console.error("Export Error:", error);
-        toast.error("Export failed. Please try again.");
-      }
+      const blob =new Blob([csv],{type:"text/csv;charset=Utf-8"});
+      const url =URL.createObjectURL(blob);
+      const link =document.createElement("a");
+      link.href=url;
+      link.download = "transactions.csv";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);  
+
     }
    
+    
+    
+    // function importFromCSV(event) {
+    //   event.preventDefault();
+    //   try {
+    //     parse(event.target.files[0], {
+    //       header: true,
+    //       complete: async function (results) {
+    //       // now  result.data is an array of object reposenting your csv rows
+    //       for(const transaction of results.data){
+    //         //write each transaction to firebase, you can use the addTransaction function here
+    //         console.log("Transactions",transaction);
+    //         const NewTransaction={
+    //           ...transaction,
+    //           amount:parseFloat(transaction.amount),
 
-    
-    
+    //         };
+    //         await addTransaction(NewTransaction,true)
+    //       }
+    //    toast.success("All Transactions Added");
+    //    fetchTransactions();
+    //    event.target.files =null;
+    //   }
+    // });
+    // }catch(e){
+    //   toast.error("Failed to import csv file");
+    // } 
+    // } 
 
-    function exportCSVLocally() {
-      const headers = ["Name", "Amount", "Tag", "Type", "Date"];
-      const csvRows = [
-        headers.join(","),
-        ...sortedTransactions.map(tx =>
-          [tx.name, tx.amount, tx.tag, tx.type, tx.date].join(",")
-        ),
-      ];
-      const csvData = new Blob([csvRows.join("\n")], { type: "text/csv" });
-      const url = window.URL.createObjectURL(csvData);
-      const a = document.createElement("a");
-      a.setAttribute("hidden", "");
-      a.setAttribute("href", url);
-      a.setAttribute("download", "transactions.csv");
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-    }
-    
+
     function importFromCSV(event) {
       event.preventDefault();
       try {
         parse(event.target.files[0], {
           header: true,
           complete: async function (results) {
-            try {
-              for (const transaction of results.data) {
-                if (!transaction.name || !transaction.amount) continue
+            let successCount = 0;
+            let failCount = 0;
+    
+            for (const transaction of results.data) {
+              const name = transaction.name?.trim();
+              const tag = transaction.tag?.trim() || "";
+              const type = transaction.type?.trim();
+              const date = transaction.date?.trim();
+              const amount = parseFloat(transaction.amount);
+    
+              if (name && !isNaN(amount) && type && date) {
                 const NewTransaction = {
-                  ...transaction,
-                  amount: parseFloat(transaction.amount),
+                  name,
+                  tag,
+                  type,
+                  date,
+                  amount,
                 };
                 await addTransaction(NewTransaction, true);
-              }              
-              toast.success("All Transactions Added");
-              fetchTransactions();
-            } catch (innerError) {
-              toast.error("Some transactions failed to import.");
-              console.error(innerError);
+                successCount++;
+              } else {
+                console.warn("Skipped invalid transaction:", transaction);
+                failCount++;
+              }
             }
+    
+            toast.success(`${successCount} transactions added successfully.`);
+            if (failCount > 0) {
+              toast.warn(`${failCount} transactions were skipped due to invalid data.`);
+            }
+    
+            fetchTransactions();
+            event.target.value = null;
           },
         });
       } catch (e) {
-        toast.error(e.message);
+        toast.error("Failed to import csv file");
       }
     }
+    
 
     const onEdit = (record) => {
       setEditMode(true);
@@ -248,7 +255,7 @@ function TransactionsTable({transactions, addTransaction,fetchTransactions,setEd
         width:"400px",
     }}
   >
-    <button className="btn" onClick={handleExport}>
+    <button className="btn" onClick={exportCSV}>
       Export to CSV</button>
     <label htmlFor="file-csv" className="btn btn-blue">
         Import From CSV
@@ -266,7 +273,11 @@ function TransactionsTable({transactions, addTransaction,fetchTransactions,setEd
 
   </div>
   </div>
-   <Table dataSource={sortedTransactions} columns={columns}/>
+   <Table
+    dataSource={sortedTransactions} 
+    columns={columns}  
+     rowKey="id"
+   />
    </div>
    </div>
   );
