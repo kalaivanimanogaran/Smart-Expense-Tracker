@@ -6,6 +6,10 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { signOut } from "firebase/auth";
 import userImg from "../../assets/user.png";
+import Logo from "../../assets/logo.png";
+import { LogoutOutlined } from "@ant-design/icons";
+
+
 
 function Header() {
   const[user, loading]=useAuthState(auth);
@@ -35,22 +39,26 @@ function Header() {
   }
 
   return(
+    
    <div className="navbar">
-    <p className="logo">Expense Tracker</p>
+      <div className="logo-container">
+    <img src={Logo} alt="logo" style={{ height: "2rem", width: "3rem" }} />
+      <p className="logo">Expense Tracker</p>
+      </div>
     {user &&(
-      <div style={{display:"flex",alignItems:"center",gap:"0.75rem"}}>
-        <img
-        src={user.photoURL ? user.photoURL:userImg}
-        style={{borderRadius:"50%",height:"1.5 rem",width:"1.5rem"}}
-       />
-     <p className="logo link" onClick={logoutFnc}>
+      <div style={{display:"flex",alignItems:"center",gap:"0.75rem"}}>      
+     <p className="logo-link" onClick={logoutFnc}
+     style={{ cursor: "pointer", display: "flex", alignItems: "center", gap: "0.4rem" }}>
+          
+            <LogoutOutlined />
       Logout
       </p>
       </div>
     )}
   
-   
+
     </div>
+  
   );
 };
 

@@ -1,4 +1,6 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&display=swap');
+/* @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&display=swap'); */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
 :root{
     --theme:#2970ff;
     --black:#000;
@@ -10,10 +12,10 @@
 
 body{
     margin: 0;
-    font-family: "Montserrat",sans-serif;
+    font-family: "poppins",sans-serif;
 }
 input{
-    font-family: "Montserrat",sans-serif;
+    font-family: "poppins",sans-serif;
 }
 
 .custom-input{
@@ -45,7 +47,9 @@ box-shadow:0px 0px 30px 8px rgba(227,227,227,0.75) ;
 border-radius: 0.5rem;
 padding:0rem 0.5rem;
 }
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&display=swap');
+/* @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&display=swap'); */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
 :root{
     --theme:#2970ff;
     --black:#000;
@@ -57,10 +61,11 @@ padding:0rem 0.5rem;
 
 body{
     margin: 0;
-    font-family: "Montserrat",sans-serif;
+    font-family: "poppins",sans-serif;
+    overflow-x: hidden;
 }
 input{
-    font-family: "Montserrat",sans-serif;
+    font-family: "poppins",sans-serif;
 }
 
 .custom-input{

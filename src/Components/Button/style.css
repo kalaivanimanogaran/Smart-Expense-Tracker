@@ -12,6 +12,7 @@
     align-items: center;
     justify-content: center;
     height: auto !important;
+    
 }
 .btn:hover{
     background-color: var(--theme);

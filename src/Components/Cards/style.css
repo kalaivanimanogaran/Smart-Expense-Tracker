@@ -1,23 +1,92 @@
-.my-card{
-    box-shadow: var(--shadow);
-    margin: 1rem;
-    border-radius: 0.5rem;
+ .my-card-1{
+    margin: 1rem; 
     min-width: 400;
-    flex:1;
-    
+    border-radius: 12px;
+    flex:1; 
+    width:250px; 
+    height: 200px;
+    overflow: hidden;
+    /* border:gray 0.5px solid;  */
+    border: 1px solid rgba(0, 0, 0, 0.05); 
+
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    transition: transform 0.2s ease;  
 }
+.my-card-2{
+    margin: 1rem; 
+    min-width: 400;
+    border-radius: 12px;
+    flex:1; 
+    width:250px; 
+    height: 200px;
+    overflow: hidden;
+    border:gray 0.5px solid; 
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    transition: transform 0.2s ease;  
+}
+.my-card-3{
+    margin: 1rem; 
+    min-width: 400;
+    border-radius: 12px;
+    flex:1; 
+    width:250px; 
+    height: 200px;
+    overflow: hidden;
+    border:gray 0.5px solid; 
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    transition: transform 0.2s ease;  
+}
+.my-card-1{
+ 
+    background: linear-gradient(135deg, #c4b5fd, #cfdff5); 
+
+  }
+  .my-card-2 {
+   
+    background: linear-gradient(135deg, #bbf7d0, #d1fae5); 
+
+  }
+  .my-card-3 {
+  
+    background: linear-gradient(135deg, #fda4af, #f3cfcf);
+
+  }
+  
+.icon-top {
+    font-size: 30px;
+    margin-bottom: 10px;
+  }
 .ant-card-head-title{
     margin: 0rem !important;
-    font-weight: 600;
+    font-weight: 400;
+
 }
 .my-row{
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
     align-items: center;
-    margin: 2rem auto;
+    margin: 1rem auto;
     flex-wrap: wrap;
-    gap:16px;
-}
+    margin-right: 200px;
+
+} 
 .my-card p{
     margin: 0;
 }
+.my-card-1:hover {
+    transform: scale(1.02);
+    border: 1px solid rgb(87, 84, 84);
+  }
+  
+  .my-card-2:hover {
+    transform: scale(1.02);
+    border: 1px solid rgb(87, 84, 84);
+  }
+  .my-card-3:hover {
+    transform: scale(1.02);
+    border: 1px solid rgb(87, 84, 84);
+  }
+  
+  

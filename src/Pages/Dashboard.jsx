@@ -12,6 +12,7 @@ import moment from "moment";
 import TransactionsTable from "../Components/TransactionsTable";
 import NoTransactions from "../Components/NoTransaction";
 import ChartComponent from "../Components/ChartComponents";
+import DashboardLayout from "../Components/Layout/DashboardLayout";
 
 function Dashboard() {
   const [transactions, setTransactions] = useState([]);
@@ -100,7 +101,7 @@ function Dashboard() {
   
   
   useEffect(() => {
-    fetchTransaction();
+    if (user) fetchTransaction();
   }, [user]);
 
   useEffect(() => {
@@ -139,13 +140,28 @@ function Dashboard() {
     setLoading(false);
   }
 
+ 
+  
   let sortedTransactions = [...transactions].sort((a, b) => {
     return new Date(a.date) - new Date(b.date);
   });
 
   return (
-    <div>
-      <Header />
+    <> 
+    <Header/>
+    <div style={{display:"flex"}}> 
+  
+  <DashboardLayout/>
+     
+  
+      <Cards
+            income={income}
+            expense={expense}
+            totalBalance={totalBalance}
+             showExpenseModal={showExpenseModal}
+             showIncomeModal={showIncomeModal}
+          />
+{/*        
       {loading ? (
         <p>Loading...</p>
       ) : (
@@ -190,11 +206,12 @@ function Dashboard() {
            
           />
         </>
-      )}
-    </div>
+      )}  */}
+       
+  </div>
+  </>
   );
 }
 
 export default Dashboard;
-
 
