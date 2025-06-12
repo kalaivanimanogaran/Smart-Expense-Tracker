@@ -5,6 +5,7 @@
   align-items: center;
   width: 100vw;
   height: 90vh;
+ 
 }
 .chart-wrapper{
     width: 93%;
@@ -15,4 +16,37 @@
     box-shadow: var(--shadow);
     margin: 2rem;
 
+}
+
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.content-wrapper {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.layout-wrapper {
+  flex: 1;
+  display: flex;
+  min-height: 0;
+
+}
+
+.menu-bar {
+  width: 220px;
+  background-color: white;
+  height: 100vh;
+  overflow: auto;
+}
+
+.page-content {
+  flex: 1;
+  padding: 16px;
+  overflow-y: auto;
+  background-color: #fff;
 }

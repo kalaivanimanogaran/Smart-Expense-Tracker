@@ -1,5 +1,7 @@
+
 import React from "react";
-import { Line, Pie } from "@ant-design/charts";
+import { Bar, Pie } from "@ant-design/charts";
+import "./style.css";
 
 function ChartComponent({ sortedTransactions }) {
   const data = sortedTransactions.map((item) => ({
@@ -29,32 +31,74 @@ function ChartComponent({ sortedTransactions }) {
 
   const config = {
     data,
-    width: 500,
-    autoFit: true,
+    height: 300,
+    width:400,
+    padding: [50, 20, 60, 40],
     xField: "date",
     yField: "amount",
+     isGroup: true,
+      color: ['#1890ff', '#73d13d', '#ff4d4f'],
+    xAxis: {
+      label: {
+        style: {
+          fontSize: 12,
+        },
+      },
+    },
+    yAxis: {
+      label: {
+        rotate: -45,
+        style: {
+          fontSize: 12,
+        },
+      },
+    },
+    tooltip: {
+      showMarkers: true,
+    },
+    barStyle: {
+      radius: [4, 4, 0, 0],
+    },
   };
 
   const spendingConfig = {
     data: newSpendings,
-    width: 500,
-    autoFit: true,
+    height: 300,
+    width:300,
     angleField: "amount",
-    colorField: "tag",
+     colorField: "tag", 
+    label: {
+      type: "spider",
+      style: {
+        fontSize: 14,
+      },
+    },
+    legend: {
+      position: "bottom",
+    },
   };
 
   return (
-    <div className="chart-wrapper">
-      <div>
+    <>
+ 
+<div className="chart-wrapper">
+      <div className="bar-chart">
         <h2 style={{ marginTop: 0 }}>Financial statistics</h2>
-        <Line {...config} />
+        <Bar {...config} />
       </div>
-      <div>
+    </div>
+      <div className="chart-wrapper-2">
+      
+      <div className="pie-chart">
         <h2>Total Spending</h2>
         <Pie {...spendingConfig} />
       </div>
-    </div>
+</div>
+     </>
+
+  
   );
 }
 
 export default ChartComponent;
+

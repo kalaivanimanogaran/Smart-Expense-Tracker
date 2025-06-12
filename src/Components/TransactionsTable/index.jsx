@@ -92,35 +92,6 @@ function TransactionsTable({transactions, addTransaction,fetchTransactions,setEd
 
     }
    
-    
-    
-    // function importFromCSV(event) {
-    //   event.preventDefault();
-    //   try {
-    //     parse(event.target.files[0], {
-    //       header: true,
-    //       complete: async function (results) {
-    //       // now  result.data is an array of object reposenting your csv rows
-    //       for(const transaction of results.data){
-    //         //write each transaction to firebase, you can use the addTransaction function here
-    //         console.log("Transactions",transaction);
-    //         const NewTransaction={
-    //           ...transaction,
-    //           amount:parseFloat(transaction.amount),
-
-    //         };
-    //         await addTransaction(NewTransaction,true)
-    //       }
-    //    toast.success("All Transactions Added");
-    //    fetchTransactions();
-    //    event.target.files =null;
-    //   }
-    // });
-    // }catch(e){
-    //   toast.error("Failed to import csv file");
-    // } 
-    // } 
-
 
     function importFromCSV(event) {
       event.preventDefault();

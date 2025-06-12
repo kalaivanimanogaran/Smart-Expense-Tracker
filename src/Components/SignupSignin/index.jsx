@@ -26,7 +26,7 @@ function signupwithEmail(){
   console.log("password",password);
   console.log("confirmPassword",confirmPassword);
 
-//   //Authetication the user ,or basically create a new account using email and password
+  //Authetication the user ,or basically create a new account using email and password
   if(name!=""&& email!=""&& password!=""&& confirmPassword!=""){
     if(password==confirmPassword){
   createUserWithEmailAndPassword(auth, email, password)

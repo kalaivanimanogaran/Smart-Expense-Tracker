@@ -9,8 +9,6 @@ import { auth, db } from "../Firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { toast } from "react-toastify";
 import moment from "moment";
-import TransactionsTable from "../Components/TransactionsTable";
-import NoTransactions from "../Components/NoTransaction";
 import ChartComponent from "../Components/ChartComponents";
 import DashboardLayout from "../Components/Layout/DashboardLayout";
 
@@ -148,25 +146,41 @@ function Dashboard() {
 
   return (
     <> 
-    <Header/>
+    {/* <Header/> */}
     <div style={{display:"flex"}}> 
   
-  <DashboardLayout/>
+   {/* <DashboardLayout/>   */}
      
+   
+           <div className="dashboard-content">
+       {/* Cards row */}
+       <div className="card-section"> 
+        <Cards
+          income={income}
+          expense={expense}
+          totalBalance={totalBalance}
+          showExpenseModal={showExpenseModal}
+          showIncomeModal={showIncomeModal}
+         />
+       </div> 
+
+   
+      <div className="lower-section">
+         <div className="chart-section"> 
+
+         </div>
+        {/* <ChartComponent sortedTransactions={transactions} /> */}
+         </div>
+      
+           </div>
+   
   
-      <Cards
-            income={income}
-            expense={expense}
-            totalBalance={totalBalance}
-             showExpenseModal={showExpenseModal}
-             showIncomeModal={showIncomeModal}
-          />
-{/*        
+       
       {loading ? (
         <p>Loading...</p>
       ) : (
         <>
-          <Cards
+           {/* <Cards
             income={income}
             expense={expense}
             totalBalance={totalBalance}
@@ -177,24 +191,24 @@ function Dashboard() {
             <ChartComponent sortedTransactions={sortedTransactions} />
           ) : (
             <NoTransactions />
-          )}
+          ) 
           <AddExpenseModal
             isExpenseModalVisible={isExpenseModalVisible}
             handleExpenseCancel={handleExpenseCancel}
             onFinish={onFinish}
             editMode={editMode}
             editTransactionData={editTransactionData}
-          />
+          /> 
           
-
+ 
           <AddIncomeModal
             isIncomeModalVisible={isIncomeModalVisible}
             handleIncomeCancel={handleIncomeCancel}
-            onFinish={onFinish}
-            editMode={editMode}
-            editTransactionData={editTransactionData}
-          />
-          <TransactionsTable
+          //   onFinish={onFinish}
+          //   editMode={editMode}
+          //   editTransactionData={editTransactionData}
+           /> 
+           <TransactionsTable
             transactions={transactions}
             addTransaction={addTransaction}
             fetchTransactions={fetchTransaction}
@@ -204,14 +218,14 @@ function Dashboard() {
             setIsIncomeModalVisible={setIsIncomeModalVisible} 
             setIsExpenseModalVisible={setIsExpenseModalVisible}
            
-          />
-        </>
-      )}  */}
-       
-  </div>
-  </>
-  );
-}
+           />  */}
+           </>
+          )}  
+      
+   </div> 
+  </> 
+    ); 
+     } 
 
 export default Dashboard;
 
